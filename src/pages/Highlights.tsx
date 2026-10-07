@@ -51,34 +51,48 @@ const Highlights = () => {
 
 const BigHighlight = ({ post }: { post: Post }) => {
   const image = resolveImageUrl(post.hero_image);
+
+  const text = (
+    <>
+      <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-foreground">
+        {post.title}
+      </h2>
+      {post.excerpt && (
+        <p className="mt-4 max-w-2xl text-foreground/70 md:text-lg line-clamp-2">
+          {post.excerpt}
+        </p>
+      )}
+      <span className="mt-6 inline-block text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+        Read →
+      </span>
+    </>
+  );
+
+  if (!image) {
+    return (
+      <Link
+        to={`/blog/${post.slug || post.id}`}
+        className="group block border border-border bg-card p-8 md:p-12"
+      >
+        {text}
+      </Link>
+    );
+  }
+
   return (
     <Link
       to={`/blog/${post.slug || post.id}`}
       className="group relative block overflow-hidden border border-border"
     >
-      {image && (
-        <div className="aspect-[21/9] overflow-hidden">
-          <img
-            src={image}
-            alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        </div>
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-        <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-foreground">
-          {post.title}
-        </h2>
-        {post.excerpt && (
-          <p className="mt-4 max-w-2xl text-foreground/70 md:text-lg line-clamp-2">
-            {post.excerpt}
-          </p>
-        )}
-        <span className="mt-6 inline-block text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">
-          Read →
-        </span>
+      <div className="aspect-[21/9] overflow-hidden">
+        <img
+          src={image}
+          alt={post.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
       </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">{text}</div>
     </Link>
   );
 };
