@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      posts: {
+        Row: {
+          content: string | null
+          created_at: string
+          demo_path: string | null
+          display_order: number
+          excerpt: string | null
+          hero_image: string | null
+          id: string
+          is_highlight: boolean
+          is_visible: boolean
+          slug: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          demo_path?: string | null
+          display_order?: number
+          excerpt?: string | null
+          hero_image?: string | null
+          id?: string
+          is_highlight?: boolean
+          is_visible?: boolean
+          slug?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          demo_path?: string | null
+          display_order?: number
+          excerpt?: string | null
+          hero_image?: string | null
+          id?: string
+          is_highlight?: boolean
+          is_visible?: boolean
+          slug?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           additional_images: string[] | null
