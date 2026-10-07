@@ -13,12 +13,15 @@ export default {
   		}
   	},
   	extend: {
-		colors: {
-			border: 'hsl(var(--border))',
-			input: 'hsl(var(--input))',
-			ring: 'hsl(var(--ring))',
-			background: 'hsl(var(--background))',
-			foreground: 'hsl(var(--foreground))',
+ 		colors: {
+ 			border: 'hsl(var(--border))',
+ 			input: 'hsl(var(--input))',
+ 			ring: 'hsl(var(--ring))',
+ 			background: 'hsl(var(--background))',
+ 			foreground: 'hsl(var(--foreground))',
+ 			paper: 'hsl(var(--paper))',
+ 			ink: 'hsl(var(--ink))',
+ 			'ink-muted': 'hsl(var(--ink-muted))',
 			
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
@@ -96,8 +99,9 @@ export default {
 			'scroll-left': 'scroll-left 30s linear infinite'
 		},
   		fontFamily: {
-  			sans: [
-  				'Inter',
+     		sans: [
+     			'IBM Plex Sans',
+     			'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
@@ -128,5 +132,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
