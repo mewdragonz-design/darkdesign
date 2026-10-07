@@ -99,8 +99,9 @@ export default {
 			'scroll-left': 'scroll-left 30s linear infinite'
 		},
   		fontFamily: {
-  			sans: [
-  				'Inter',
+     		sans: [
+     			'IBM Plex Sans',
+     			'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
