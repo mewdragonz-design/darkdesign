@@ -88,7 +88,7 @@ const Teaser = ({ post }: { post: Post }) => {
         <p className="text-sm md:text-base font-medium tracking-[0.2em] uppercase text-foreground/50 mb-6">
           {formatDate(post.created_at)}
         </p>
-        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-foreground max-w-4xl">
+        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-paper max-w-4xl">
           {post.title}
         </h2>
         {post.excerpt && (
