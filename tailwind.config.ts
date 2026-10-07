@@ -13,12 +13,15 @@ export default {
   		}
   	},
   	extend: {
-		colors: {
-			border: 'hsl(var(--border))',
-			input: 'hsl(var(--input))',
-			ring: 'hsl(var(--ring))',
-			background: 'hsl(var(--background))',
-			foreground: 'hsl(var(--foreground))',
+ 		colors: {
+ 			border: 'hsl(var(--border))',
+ 			input: 'hsl(var(--input))',
+ 			ring: 'hsl(var(--ring))',
+ 			background: 'hsl(var(--background))',
+ 			foreground: 'hsl(var(--foreground))',
+ 			paper: 'hsl(var(--paper))',
+ 			ink: 'hsl(var(--ink))',
+ 			'ink-muted': 'hsl(var(--ink-muted))',
 			
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
