@@ -24,7 +24,7 @@ const Index = () => {
             <p className="text-sm md:text-base font-medium tracking-[0.2em] uppercase text-foreground/50 mb-6">
               Research & Writing
             </p>
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-foreground font-semibold">
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-paper font-semibold">
               Will
               <br />
               Sumerfield
