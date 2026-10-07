@@ -15,8 +15,9 @@ const Index = () => {
   const { data: posts, isLoading } = usePosts();
 
   return (
-    <SiteHeader variant="dark">
-      <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-background">
+    <div className="bg-background">
+      <SiteHeader variant="dark" />
+      <div className="h-screen overflow-y-scroll snap-y snap-mandatory">
         {/* Hero — black, high contrast */}
         <section className="relative h-screen snap-start flex flex-col justify-center px-8 md:px-16 lg:px-24">
           <div className="max-w-5xl">
@@ -61,7 +62,7 @@ const Index = () => {
           </section>
         )}
       </div>
-    </SiteHeader>
+    </div>
   );
 };
 
