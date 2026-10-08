@@ -1,0 +1,2 @@
+ALTER TABLE public.posts ADD COLUMN show_on_home boolean NOT NULL DEFAULT false, ADD COLUMN home_presentation text NOT NULL DEFAULT 'abstract', ADD COLUMN home_summary text;
+ALTER TABLE public.posts ADD CONSTRAINT posts_home_presentation_valid CHECK (home_presentation IN ('abstract', 'demo'));

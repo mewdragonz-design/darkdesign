@@ -5,13 +5,16 @@ import { toast } from "sonner";
 interface PostInput {
   title: string;
   slug?: string;
-  excerpt?: string;
-  content?: string;
-  hero_image?: string;
+  excerpt?: string | null;
+  content?: string | null;
+  hero_image?: string | null;
   is_highlight?: boolean;
-  demo_path?: string;
+  demo_path?: string | null;
   is_visible?: boolean;
   display_order?: number;
+  show_on_home?: boolean;
+  home_presentation?: string;
+  home_summary?: string | null;
 }
 
 export const useCreatePost = () => {

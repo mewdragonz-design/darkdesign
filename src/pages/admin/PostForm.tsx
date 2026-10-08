@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { demoRegistry } from "@/demos/registry";
 
 const generateSlug = (title: string) => {
   return title
@@ -34,6 +36,10 @@ const PostForm = () => {
   const [isHighlight, setIsHighlight] = useState(false);
   const [demoPath, setDemoPath] = useState("");
   const [isVisible, setIsVisible] = useState(true);
+  const [showOnHome, setShowOnHome] = useState(false);
+  const [homePresentation, setHomePresentation] = useState("abstract");
+  const [displayOrder, setDisplayOrder] = useState(0);
+  const [homeSummary, setHomeSummary] = useState("");
 
   useEffect(() => {
     if (isEditing && posts) {
@@ -47,6 +53,10 @@ const PostForm = () => {
         setIsHighlight(post.is_highlight);
         setDemoPath(post.demo_path || "");
         setIsVisible(post.is_visible ?? true);
+        setShowOnHome(post.show_on_home);
+        setHomePresentation(post.home_presentation);
+        setDisplayOrder(post.display_order);
+        setHomeSummary(post.home_summary || "");
       }
     }
   }, [isEditing, id, posts]);
@@ -70,10 +80,14 @@ const PostForm = () => {
       is_highlight: isHighlight,
       demo_path: demoPath || null,
       is_visible: isVisible,
+      show_on_home: showOnHome,
+      home_presentation: homePresentation,
+      display_order: displayOrder,
+      home_summary: homeSummary || null,
     };
 
-    if (isEditing) {
-      await updatePost.mutateAsync({ id: id!, ...postData });
+    if (id) {
+      await updatePost.mutateAsync({ id, ...postData });
     } else {
       await createPost.mutateAsync(postData);
     }
@@ -121,7 +135,7 @@ const PostForm = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="excerpt">Excerpt (one-line summary for teasers)</Label>
+            <Label htmlFor="excerpt">Short summary</Label>
             <Textarea
               id="excerpt"
               value={excerpt}
@@ -167,7 +181,27 @@ const PostForm = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-8">
+          <fieldset className="space-y-5 border-t border-border pt-6">
+            <legend className="text-lg font-medium">Homepage exhibition</legend>
+            <div className="flex items-center gap-3">
+              <Switch id="showOnHome" checked={showOnHome} onCheckedChange={setShowOnHome} />
+              <Label htmlFor="showOnHome">Include in exhibition</Label>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="homePresentation">Presentation</Label>
+                <Select value={homePresentation} onValueChange={setHomePresentation}>
+                  <SelectTrigger id="homePresentation"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectItem value="abstract">White visual abstract</SelectItem><SelectItem value="demo">Black live demo</SelectItem></SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2"><Label htmlFor="displayOrder">Display order</Label><Input id="displayOrder" type="number" step="1" value={displayOrder} onChange={e => setDisplayOrder(Number(e.target.value))} /></div>
+            </div>
+            <div className="space-y-2"><Label htmlFor="homeSummary">Exhibition caption (optional)</Label><Textarea id="homeSummary" rows={3} value={homeSummary} onChange={e => setHomeSummary(e.target.value)} /></div>
+            {showOnHome && homePresentation === "demo" && !demoRegistry[demoPath.split("/").pop() || ""] && <p role="alert" className="text-sm text-muted-foreground">Choose an available demo path before saving a live demo.</p>}
+          </fieldset>
+
+          <div className="flex flex-wrap items-center gap-8">
             <div className="flex items-center gap-3">
               <Switch
                 id="isVisible"
@@ -182,12 +216,12 @@ const PostForm = () => {
                 checked={isHighlight}
                 onCheckedChange={setIsHighlight}
               />
-              <Label htmlFor="isHighlight">Highlight</Label>
+              <Label htmlFor="isHighlight">Opening highlight</Label>
             </div>
           </div>
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending || (showOnHome && homePresentation === "demo" && !demoRegistry[demoPath.split("/").pop() || ""])}>
               {isPending
                 ? "Saving..."
                 : isEditing

@@ -22,9 +22,12 @@ export type Database = {
           display_order: number
           excerpt: string | null
           hero_image: string | null
+          home_presentation: string
+          home_summary: string | null
           id: string
           is_highlight: boolean
           is_visible: boolean
+          show_on_home: boolean
           slug: string | null
           title: string
           updated_at: string
@@ -36,9 +39,12 @@ export type Database = {
           display_order?: number
           excerpt?: string | null
           hero_image?: string | null
+          home_presentation?: string
+          home_summary?: string | null
           id?: string
           is_highlight?: boolean
           is_visible?: boolean
+          show_on_home?: boolean
           slug?: string | null
           title: string
           updated_at?: string
@@ -50,9 +56,12 @@ export type Database = {
           display_order?: number
           excerpt?: string | null
           hero_image?: string | null
+          home_presentation?: string
+          home_summary?: string | null
           id?: string
           is_highlight?: boolean
           is_visible?: boolean
+          show_on_home?: boolean
           slug?: string | null
           title?: string
           updated_at?: string

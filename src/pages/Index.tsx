@@ -1,125 +1,75 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
-import { usePosts, type Post } from "@/hooks/usePosts";
-import { resolveImageUrl } from "@/lib/assetResolver";
-import { ArrowDown } from "lucide-react";
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+import { Button } from "@/components/ui/button";
+import ResearchFigure from "@/components/ResearchFigure";
+import HomeExhibit, { postLink } from "@/components/HomeExhibit";
+import { usePosts } from "@/hooks/usePosts";
+import { openingHighlights, orderedExhibits } from "@/lib/exhibition";
 
 const Index = () => {
-  const { data: posts, isLoading } = usePosts();
+  const { data: posts = [], isLoading, isError } = usePosts();
+  const highlights = openingHighlights(posts);
+  const exhibits = orderedExhibits(posts);
+  const [featured, ...smaller] = highlights;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [scrolled, setScrolled] = useState(false);
 
-  return (
-    <div className="bg-background">
-      <SiteHeader variant="dark" />
-      <div className="h-screen overflow-y-scroll snap-y snap-mandatory">
-        {/* Hero — black, high contrast */}
-        <section className="relative h-screen snap-start flex flex-col justify-center px-8 md:px-16 lg:px-24">
-          <div className="max-w-5xl">
-            <p className="text-sm md:text-base font-medium tracking-[0.2em] uppercase text-foreground/50 mb-6">
-              Research & Writing
-            </p>
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-paper font-semibold">
-              Will
-              <br />
-              Sumerfield
-            </h1>
-            <p className="mt-8 text-lg md:text-2xl text-foreground/70 max-w-2xl leading-relaxed">
-              Lorem ipsum dolor sit amet — research, ideas, and interactive
-              experiments, written down.
-            </p>
+  useEffect(() => {
+    if (document.querySelector('link[data-site-font]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono&display=swap";
+    link.dataset.siteFont = "true";
+    document.head.appendChild(link);
+  }, []);
+
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) setTheme(entry.target.getAttribute("data-theme") === "light" ? "light" : "dark");
+      }
+    }, { root, rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+    root.querySelectorAll("section[data-theme]").forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, [posts]);
+
+  return <div className="bg-background">
+    <SiteHeader variant={theme} scrolled={scrolled} />
+    <div ref={scrollRef} onScroll={event => setScrolled(event.currentTarget.scrollTop > 40)} className="h-dvh overflow-y-auto snap-y snap-mandatory" aria-label="Research exhibition">
+      <section data-theme="dark" className="exhibition-screen opening-screen relative bg-background text-paper px-6 md:px-12 lg:px-20">
+        <div className="opening-grid max-w-7xl mx-auto w-full grid lg:grid-cols-[.8fr_1.2fr] gap-8 lg:gap-16 items-center">
+          <div className="self-center">
+            <p className="text-xs font-mono text-paper/50 mb-5">RESEARCH & WRITING</p>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-medium leading-[1.02]">Will<br className="hidden lg:block" /> Sumerfield</h1>
+            <p className="mt-5 md:mt-8 text-base md:text-lg text-paper/60 max-w-sm leading-relaxed">Lorem ipsum dolor sit amet — research, ideas, and interactive experiments, written down.</p>
           </div>
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-foreground/40">
-            <ArrowDown className="w-5 h-5 animate-bounce" />
+          <div className="min-w-0">
+            {featured && <Link to={postLink(featured)} className="group block">
+              <div className="opening-main-figure text-paper/70 overflow-hidden"><ResearchFigure post={featured} /></div>
+              <div className="flex items-start gap-4 justify-between border-t border-paper/20 pt-3">
+                <div><h2 className="text-lg md:text-xl font-medium leading-tight group-hover:text-paper/70">{featured.title}</h2><p className="text-sm text-paper/50 mt-2 max-w-lg line-clamp-2">{featured.home_summary || featured.excerpt}</p></div>
+                <ArrowUpRight className="w-5 h-5 shrink-0 mt-1" />
+              </div>
+            </Link>}
+            <div className="grid grid-cols-2 gap-5 md:gap-8 mt-5 md:mt-7">
+              {smaller.map(post => <Link key={post.id} to={postLink(post)} className="group min-w-0">
+                <div className="opening-small-figure text-paper/60"><ResearchFigure post={post} /></div>
+                <h2 className="border-t border-paper/20 pt-3 text-sm md:text-base font-medium leading-snug group-hover:text-paper/70">{post.title} <ArrowUpRight className="inline h-3 w-3" /></h2>
+              </Link>)}
+            </div>
+            {isLoading && <p className="text-paper/50">Loading…</p>}
+            {isError && <p className="text-paper/50">Work is unavailable right now. Please try again.</p>}
           </div>
-        </section>
-
-        {/* Full-screen post teasers */}
-        {isLoading && (
-          <section className="h-screen snap-start flex items-center justify-center">
-            <p className="text-muted-foreground">Loading posts…</p>
-          </section>
-        )}
-
-        {posts?.map((post) => (
-          <Teaser key={post.id} post={post} />
-        ))}
-
-        {!isLoading && posts?.length === 0 && (
-          <section className="h-screen snap-start flex flex-col items-center justify-center px-8">
-            <p className="text-xl text-foreground/50">No posts yet.</p>
-            <Link
-              to="/admin"
-              className="mt-4 text-sm text-foreground/70 hover:text-foreground underline underline-offset-4"
-            >
-              Write the first one
-            </Link>
-          </section>
-        )}
-      </div>
+        </div>
+        {exhibits.length > 0 && <Button variant="ghost" size="icon" aria-label="Next exhibit" className="absolute bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 text-paper/50 hover:bg-transparent hover:text-paper" onClick={() => scrollRef.current?.querySelectorAll("section")[1]?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}><ArrowDown /></Button>}
+      </section>
+      {exhibits.map((post, index) => <HomeExhibit key={post.id} post={post} index={index} />)}
     </div>
-  );
+  </div>;
 };
-
-const Teaser = ({ post }: { post: Post }) => {
-  const image = resolveImageUrl(post.hero_image);
-
-  return (
-    <section className="relative h-screen snap-start flex items-center overflow-hidden bg-background">
-      {/* Optional hero image, kept uncrowded on the right */}
-      {image && (
-        <div className="absolute inset-0 md:left-1/2">
-          <img
-            src={image}
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-cover opacity-30 md:opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent md:from-background md:via-background/40 md:to-background/20" />
-        </div>
-      )}
-
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-8 md:px-16 lg:px-24">
-        <p className="text-sm md:text-base font-medium tracking-[0.2em] uppercase text-foreground/50 mb-6">
-          {formatDate(post.created_at)}
-        </p>
-        <h2 className="text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-paper max-w-4xl">
-          {post.title}
-        </h2>
-        {post.excerpt && (
-          <p className="mt-6 text-base md:text-xl text-foreground/70 max-w-2xl leading-relaxed line-clamp-3">
-            {post.excerpt}
-          </p>
-        )}
-        <div className="mt-10 flex items-center gap-4">
-          <Link
-            to={`/blog/${post.slug || post.id}`}
-            className="inline-flex items-center gap-3 px-8 py-3 text-sm font-medium bg-paper text-ink hover:bg-foreground/90 hover:text-paper transition-colors"
-          >
-            Read
-          </Link>
-          {post.demo_path && (
-            <Link
-              to={post.demo_path}
-              className="inline-flex items-center gap-3 px-8 py-3 text-sm font-medium border border-border text-foreground/80 hover:text-foreground hover:border-foreground/40 transition-colors"
-            >
-              Demo
-            </Link>
-          )}
-        </div>
-      </div>
-
-      {/* Post counter */}
-      <div className="absolute bottom-8 right-8 md:right-16 text-xs tracking-widest text-foreground/30 font-mono">
-        {post.is_highlight ? "★" : ""}
-      </div>
-    </section>
-  );
-};
-
 export default Index;

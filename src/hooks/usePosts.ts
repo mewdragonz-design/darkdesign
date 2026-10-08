@@ -12,6 +12,9 @@ export interface Post {
   demo_path: string | null;
   display_order: number;
   is_visible: boolean;
+  show_on_home: boolean;
+  home_presentation: string;
+  home_summary: string | null;
   created_at: string;
   updated_at: string;
 }
