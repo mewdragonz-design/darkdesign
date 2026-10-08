@@ -18,6 +18,15 @@ const Index = () => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    if (document.querySelector('link[data-site-font]')) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono&display=swap";
+    link.dataset.siteFont = "true";
+    document.head.appendChild(link);
+  }, []);
+
+  useEffect(() => {
     const root = scrollRef.current;
     if (!root) return;
     const observer = new IntersectionObserver(entries => {

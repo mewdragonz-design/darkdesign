@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { describe, test, expect } from "bun:test";
 import { orderedExhibits, openingHighlights, exhibitionPresentation } from "./exhibition";
 import type { Post } from "@/hooks/usePosts";
