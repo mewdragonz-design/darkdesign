@@ -1,7 +1,6 @@
-/// <reference types="bun" />
 import { describe, test, expect } from "bun:test";
-import { orderedExhibits, openingHighlights, exhibitionPresentation } from "./exhibition";
-import type { Post } from "@/hooks/usePosts";
+import { orderedExhibits, openingHighlights, exhibitionPresentation } from "../src/lib/exhibition";
+import type { Post } from "../src/hooks/usePosts";
 
 const post = (id: string, overrides: Partial<Post> = {}): Post => ({
   id, title: id, slug: id, excerpt: null, content: null, hero_image: null,
