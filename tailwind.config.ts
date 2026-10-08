@@ -22,6 +22,8 @@ export default {
  			paper: 'hsl(var(--paper))',
  			ink: 'hsl(var(--ink))',
  			'ink-muted': 'hsl(var(--ink-muted))',
+      'figure-a': 'hsl(var(--figure-a))',
+      'figure-b': 'hsl(var(--figure-b))',
 			
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
