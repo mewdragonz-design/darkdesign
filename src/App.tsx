@@ -10,7 +10,6 @@ import Writing from "./pages/Writing";
 import Demos from "./pages/Demos";
 import DemoPage from "./pages/DemoPage";
 import About from "./pages/About";
-import Contact from "./pages/Contact";
 import CV from "./pages/CV";
 import AdminLogin from "./pages/admin/Login";
 import AdminRegister from "./pages/admin/Register";
@@ -30,11 +29,12 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/blog/:slug" element={<PostPage />} />
           <Route path="/highlights" element={<Navigate to="/" replace />} />
-          <Route path="/writing" element={<Writing />} />
+          <Route path="/topics" element={<Writing />} />
+          <Route path="/writing" element={<Navigate to="/topics" replace />} />
           <Route path="/demos" element={<Demos />} />
           <Route path="/demos/:slug" element={<DemoPage />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/contact" element={<Navigate to="/" replace />} />
           <Route path="/cv" element={<CV />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />

@@ -36,7 +36,7 @@ const About = () => {
               View CV
             </Link>
             <Link
-              to="/contact"
+              to="/"
               className="px-8 py-3 text-sm font-medium border border-ink/20 text-ink hover:border-ink/50 transition-colors"
             >
               Get in touch

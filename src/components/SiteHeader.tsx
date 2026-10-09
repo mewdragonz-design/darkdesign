@@ -10,10 +10,8 @@ interface SiteHeaderProps {
 
 const links = [
   { label: "Home", to: "/" },
-  { label: "Writing", to: "/writing" },
-  { label: "Demos", to: "/demos" },
+  { label: "Topics", to: "/topics" },
   { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
 ];
 
 const SiteHeader = ({ variant = "dark", scrolled }: SiteHeaderProps) => {
