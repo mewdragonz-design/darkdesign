@@ -190,7 +190,7 @@ All colors MUST be HSL.
   color: inherit;
   background: transparent;
 }
-.exhibition-scroll-step:hover { background: transparent; }
+.exhibition-scrollbar .exhibition-scroll-step:hover { background: transparent; color: inherit; }
 .exhibition-scroll-mark {
   display: block;
   width: 2px;
