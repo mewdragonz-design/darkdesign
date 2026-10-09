@@ -8,3 +8,4 @@
 - [x] Verify exhibition rules and desktop/mobile interaction
 
 - [ ] Verify saving publishing controls after the owner creates an admin account (no accounts exist yet).
+- [ ] Make the opening screen read as the biggest works: "Key works" label, numbered ranking, larger featured title.

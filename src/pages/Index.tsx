@@ -75,17 +75,24 @@ const Index = () => {
              </div>
           </div>
           <div className="min-w-0">
+            <div className="flex items-center gap-4 mb-4 md:mb-5">
+              <h2 className="text-[11px] md:text-xs font-mono font-medium uppercase tracking-[0.24em] text-paper">Key works</h2>
+              <span aria-hidden="true" className="h-px flex-1 bg-paper/20" />
+            </div>
             {featured && <Link to={postLink(featured)} className="group block">
-              <div className="opening-main-figure text-paper/70 overflow-hidden"><ResearchFigure post={featured} /></div>
-              <div className="flex items-start gap-4 justify-between border-t border-paper/20 pt-3">
-                <div><h2 className="text-lg md:text-xl font-medium leading-tight group-hover:text-paper/70">{featured.title}</h2><p className="text-sm text-paper/50 mt-2 max-w-lg line-clamp-2">{featured.home_summary || featured.excerpt}</p></div>
+              <div className="opening-main-figure text-paper/70 overflow-hidden ring-1 ring-paper/15"><ResearchFigure post={featured} /></div>
+              <div className="flex items-start gap-4 justify-between border-t border-paper/25 pt-3">
+                <div className="min-w-0">
+                  <h3 className="text-xl md:text-2xl font-medium leading-tight group-hover:text-paper/70"><span className="font-mono text-sm md:text-base text-paper/40 mr-3 tabular-nums">01</span>{featured.title}</h3>
+                  <p className="text-sm text-paper/50 mt-2 max-w-lg line-clamp-2">{featured.home_summary || featured.excerpt}</p>
+                </div>
                 <ArrowUpRight className="w-5 h-5 shrink-0 mt-1" />
               </div>
             </Link>}
             <div className="grid grid-cols-2 gap-5 md:gap-8 mt-5 md:mt-7">
-              {smaller.map(post => <Link key={post.id} to={postLink(post)} className="group min-w-0">
+              {smaller.map((post, i) => <Link key={post.id} to={postLink(post)} className="group min-w-0">
                 <div className="opening-small-figure text-paper/60"><ResearchFigure post={post} /></div>
-                <h2 className="border-t border-paper/20 pt-3 text-sm md:text-base font-medium leading-snug group-hover:text-paper/70">{post.title} <ArrowUpRight className="inline h-3 w-3" /></h2>
+                <h3 className="border-t border-paper/20 pt-3 text-sm md:text-base font-medium leading-snug group-hover:text-paper/70"><span className="font-mono text-xs text-paper/40 mr-2 tabular-nums">{String(i + 2).padStart(2, "0")}</span>{post.title} <ArrowUpRight className="inline h-3 w-3" /></h3>
               </Link>)}
             </div>
             {isLoading && <p className="text-paper/50">Loading…</p>}
