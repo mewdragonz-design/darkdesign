@@ -92,7 +92,10 @@ const Index = () => {
             <div className="grid grid-cols-2 gap-5 md:gap-8 mt-5 md:mt-7">
               {smaller.map((post, i) => <Link key={post.id} to={postLink(post)} className="group min-w-0">
                 <div className="opening-small-figure text-paper/60"><ResearchFigure post={post} /></div>
-                <h3 className="border-t border-paper/20 pt-3 text-[13px] md:text-base font-medium leading-snug group-hover:text-paper/70"><span className="font-mono text-xs text-paper/40 mr-2 tabular-nums">{String(i + 2).padStart(2, "0")}</span>{post.title}{"\u00A0"}<ArrowUpRight className="inline h-3 w-3" /></h3>
+                <div className="border-t border-paper/20 pt-3 flex items-start gap-2">
+                  <h3 className="min-w-0 text-[13px] md:text-base font-medium leading-snug group-hover:text-paper/70"><span className="font-mono text-xs text-paper/40 mr-2 tabular-nums">{String(i + 2).padStart(2, "0")}</span>{post.title}</h3>
+                  <ArrowUpRight className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                </div>
               </Link>)}
             </div>
             {isLoading && <p className="text-paper/50">Loading…</p>}
