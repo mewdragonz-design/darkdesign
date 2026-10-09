@@ -16,6 +16,12 @@ const Index = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [scrolled, setScrolled] = useState(false);
+  const [activeScreen, setActiveScreen] = useState(0);
+  const screenTitles = ["Introduction", ...exhibits.map(post => post.title)];
+  const goToScreen = (index: number) => {
+    const sections = scrollRef.current?.querySelectorAll("section[data-theme]");
+    sections?.[index]?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  };
 
   useEffect(() => {
     if (document.querySelector('link[data-site-font]')) return;
@@ -40,13 +46,33 @@ const Index = () => {
 
   return <div className="bg-background">
     <SiteHeader variant={theme} scrolled={scrolled} />
-    <div ref={scrollRef} onScroll={event => setScrolled(event.currentTarget.scrollTop > 40)} className="h-dvh overflow-y-auto snap-y snap-mandatory" aria-label="Research exhibition">
+    <nav aria-label="Exhibition screens" className={`exhibition-scrollbar ${theme === "dark" ? "text-paper" : "text-ink"}`}>
+      {screenTitles.map((title, index) => <Button key={`${index}-${title}`} variant="ghost" size="icon" aria-label={`Go to ${title}`} aria-current={activeScreen === index ? "step" : undefined} title={title} className="exhibition-scroll-step" onClick={() => goToScreen(index)} onKeyDown={event => {
+        const next = event.key === "ArrowDown" ? index + 1 : event.key === "ArrowUp" ? index - 1 : event.key === "Home" ? 0 : event.key === "End" ? screenTitles.length - 1 : undefined;
+        if (next === undefined) return;
+        event.preventDefault();
+        const target = Math.max(0, Math.min(screenTitles.length - 1, next));
+        goToScreen(target);
+        event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("button")[target]?.focus();
+      }}><span className="exhibition-scroll-mark" /></Button>)}
+    </nav>
+    <div ref={scrollRef} onScroll={event => {
+      const root = event.currentTarget;
+      setScrolled(root.scrollTop > 40);
+      const sections = Array.from(root.querySelectorAll<HTMLElement>("section[data-theme]"));
+      const closest = sections.reduce((best, section, index) => Math.abs(section.offsetTop - root.scrollTop) < Math.abs((sections[best]?.offsetTop ?? 0) - root.scrollTop) ? index : best, 0);
+      setActiveScreen(closest);
+    }} className="exhibition-scroll-container h-dvh overflow-y-auto snap-y snap-mandatory" aria-label="Research exhibition">
       <section data-theme="dark" className="exhibition-screen opening-screen relative bg-background text-paper px-6 md:px-12 lg:px-20">
         <div className="opening-grid max-w-7xl mx-auto w-full grid lg:grid-cols-[.8fr_1.2fr] gap-8 lg:gap-16 items-center">
           <div className="self-center">
             <p className="text-xs font-mono text-paper/50 mb-5">RESEARCH & WRITING</p>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-medium leading-[1.02]">Will<br className="hidden lg:block" /> Sumerfield</h1>
             <p className="mt-5 md:mt-8 text-base md:text-lg text-paper/60 max-w-sm leading-relaxed">Lorem ipsum dolor sit amet — research, ideas, and interactive experiments, written down.</p>
+             <div className="mt-5 md:mt-8 text-xs text-paper/50 flex flex-wrap items-center gap-x-5 gap-y-2">
+               <a href="mailto:will@example.com" className="underline underline-offset-4 hover:text-paper">Email (placeholder)</a>
+               <Link to="/cv" className="underline underline-offset-4 hover:text-paper">CV <ArrowUpRight className="inline h-3 w-3" /></Link>
+             </div>
           </div>
           <div className="min-w-0">
             {featured && <Link to={postLink(featured)} className="group block">
@@ -66,7 +92,7 @@ const Index = () => {
             {isError && <p className="text-paper/50">Work is unavailable right now. Please try again.</p>}
           </div>
         </div>
-        {exhibits.length > 0 && <Button variant="ghost" size="icon" aria-label="Next exhibit" className="absolute bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 text-paper/50 hover:bg-transparent hover:text-paper" onClick={() => scrollRef.current?.querySelectorAll("section")[1]?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}><ArrowDown /></Button>}
+        {exhibits.length > 0 && <Button variant="ghost" size="icon" aria-label="Next exhibit" className="absolute bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 text-paper/50 hover:bg-transparent hover:text-paper" onClick={() => goToScreen(1)}><ArrowDown /></Button>}
       </section>
       {exhibits.map((post, index) => <HomeExhibit key={post.id} post={post} index={index} />)}
     </div>
